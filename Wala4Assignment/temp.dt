@@ -1,0 +1,37 @@
+digraph "DirectedGraph" {
+graph [concentrate = true];center=true;fontsize=6;node [ color=blue,shape="box"fontsize=6,fontcolor=black,fontname=Arial];edge [ color=black,fontsize=6,fontcolor=black,fontname=Arial]; 
+   "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeRootMethod()V > Context: Everywhere" [ label="Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeRootMethod()V > Context: Everywhere"]
+   "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeWorldClinit()V > Context: Everywhere" [ label="Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeWorldClinit()V > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/String, <clinit>()V > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/String, <clinit>()V > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/Object, <init>()V > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/Object, <init>()V > Context: Everywhere"]
+   "Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere" [ label="Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere"]
+   "Node: synthetic < Primordial, Ljava/lang/System, getProperty(Ljava/lang/String;)Ljava/lang/String; > Context: Everywhere" [ label="Node: synthetic < Primordial, Ljava/lang/System, getProperty(Ljava/lang/String;)Ljava/lang/String; > Context: Everywhere"]
+   "Node: synthetic < Primordial, Ljava/lang/System, <clinit>()V > Context: Everywhere" [ label="Node: synthetic < Primordial, Ljava/lang/System, <clinit>()V > Context: Everywhere"]
+   "Node: < Application, Lcom/example/util/Test, <init>(Ljava/lang/String;)V > Context: Everywhere" [ label="Node: < Application, Lcom/example/util/Test, <init>(Ljava/lang/String;)V > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/Boolean, parseBoolean(Ljava/lang/String;)Z > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/Boolean, parseBoolean(Ljava/lang/String;)Z > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/Boolean, <clinit>()V > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/Boolean, <clinit>()V > Context: Everywhere"]
+   "Node: < Application, Lcom/example/util/Test, processData(Z)Ljava/lang/String; > Context: Everywhere" [ label="Node: < Application, Lcom/example/util/Test, processData(Z)Ljava/lang/String; > Context: Everywhere"]
+   "Node: synthetic < Primordial, Ljava/lang/System, initializeSystemClass()V > Context: Everywhere" [ label="Node: synthetic < Primordial, Ljava/lang/System, initializeSystemClass()V > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/StringBuilder, <init>(Ljava/lang/String;)V > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/StringBuilder, <init>(Ljava/lang/String;)V > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/StringBuilder, append(Ljava/lang/String;)Ljava/lang/StringBuilder; > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/StringBuilder, append(Ljava/lang/String;)Ljava/lang/StringBuilder; > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/StringBuilder, toString()Ljava/lang/String; > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/StringBuilder, toString()Ljava/lang/String; > Context: Everywhere"]
+   "Node: < Primordial, Ljava/lang/AbstractStringBuilder, <init>()V > Context: Everywhere" [ label="Node: < Primordial, Ljava/lang/AbstractStringBuilder, <init>()V > Context: Everywhere"]
+ "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeRootMethod()V > Context: Everywhere" -> "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeWorldClinit()V > Context: Everywhere" 
+ "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeRootMethod()V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/Object, <init>()V > Context: Everywhere" 
+ "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeRootMethod()V > Context: Everywhere" -> "Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere" 
+ "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeWorldClinit()V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/String, <clinit>()V > Context: Everywhere" 
+ "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeWorldClinit()V > Context: Everywhere" -> "Node: synthetic < Primordial, Ljava/lang/System, <clinit>()V > Context: Everywhere" 
+ "Node: synthetic < Primordial, Lcom/ibm/wala/FakeRootClass, fakeWorldClinit()V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/Boolean, <clinit>()V > Context: Everywhere" 
+ "Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere" -> "Node: synthetic < Primordial, Ljava/lang/System, getProperty(Ljava/lang/String;)Ljava/lang/String; > Context: Everywhere" 
+ "Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere" -> "Node: < Application, Lcom/example/util/Test, <init>(Ljava/lang/String;)V > Context: Everywhere" 
+ "Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/Boolean, parseBoolean(Ljava/lang/String;)Z > Context: Everywhere" 
+ "Node: < Application, Lcom/example/test/Main, main([Ljava/lang/String;)V > Context: Everywhere" -> "Node: < Application, Lcom/example/util/Test, processData(Z)Ljava/lang/String; > Context: Everywhere" 
+ "Node: synthetic < Primordial, Ljava/lang/System, <clinit>()V > Context: Everywhere" -> "Node: synthetic < Primordial, Ljava/lang/System, initializeSystemClass()V > Context: Everywhere" 
+ "Node: < Application, Lcom/example/util/Test, <init>(Ljava/lang/String;)V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/Object, <init>()V > Context: Everywhere" 
+ "Node: < Application, Lcom/example/util/Test, processData(Z)Ljava/lang/String; > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/StringBuilder, <init>(Ljava/lang/String;)V > Context: Everywhere" 
+ "Node: < Application, Lcom/example/util/Test, processData(Z)Ljava/lang/String; > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/StringBuilder, append(Ljava/lang/String;)Ljava/lang/StringBuilder; > Context: Everywhere" 
+ "Node: < Application, Lcom/example/util/Test, processData(Z)Ljava/lang/String; > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/StringBuilder, toString()Ljava/lang/String; > Context: Everywhere" 
+ "Node: < Primordial, Ljava/lang/StringBuilder, <init>(Ljava/lang/String;)V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/AbstractStringBuilder, <init>()V > Context: Everywhere" 
+ "Node: < Primordial, Ljava/lang/AbstractStringBuilder, <init>()V > Context: Everywhere" -> "Node: < Primordial, Ljava/lang/Object, <init>()V > Context: Everywhere" 
+
+}
