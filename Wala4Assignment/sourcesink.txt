@@ -1,0 +1,2 @@
+SOURCE java.lang.System.getProperty(Ljava/lang/String;)Ljava/lang/String;
+SINK java.io.PrintStream.println(Ljava/lang/String;)V
