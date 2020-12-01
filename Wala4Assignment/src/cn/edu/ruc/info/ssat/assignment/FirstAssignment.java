@@ -71,6 +71,8 @@ public class FirstAssignment{
 	public IField[] taint_field;
 	public int taint_field_num;
 
+	public ArrayList<SSAInstruction> ins_path = new ArrayList<SSAInstruction>();
+
 
 	public static void main(String[] args) throws WalaException, FileNotFoundException {
 		FirstAssignment fa = new FirstAssignment();
@@ -81,33 +83,23 @@ public class FirstAssignment{
 
 	}
 
-	public int ifFieldStain(IField field)
-	{
-
-		for(int i=0;i < taint_field_num;i++)
-		{
-
-			if(field.equals(taint_field[i]))
-			{
-
+	public int ifFieldStain(IField field) {
+		for(int i=0;i < taint_field_num;i++) {
+			if(field.equals(taint_field[i])) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	public int ifRegStain(int v,IMethod method,IClass cla)
-	{
-		for(int i=0;i<taint_num;i++)
-		{
-			if(taint_reg[i]==v && method_names[i]==method && clas[i]==cla)
-			{
+	public int ifRegStain(int v,IMethod method,IClass cla) {
+		for(int i=0;i<taint_num;i++) {
+			if(taint_reg[i]==v && method_names[i]==method && clas[i]==cla) {
 				return i;
 			}
 		}
 		return -1;
 	}
-
 
 	public void AddStainRegister(int str,IMethod method,Descriptor des,int line,IClass cla) {
 		//System.out.println("regadd"+str+method+cla);
@@ -135,6 +127,20 @@ public class FirstAssignment{
 		clas[taint_num]=cla;
 		taint_num++;
 
+	}
+	public void AddStainField(IField field) {
+
+
+		for(int i=0;i<taint_field_num;i++) {
+			if(field==taint_field[i]) {
+				return;
+			}
+		}
+		if(taint_field.length==taint_field_num) {
+			taint_field=Arrays.copyOf(taint_field, taint_field.length+10);
+		}
+		taint_field[taint_field_num]=field;
+		taint_field_num++;
 	}
 
 	private void init_source_sink(String filepath) throws FileNotFoundException {
@@ -189,6 +195,8 @@ public class FirstAssignment{
 				return true;
 		return false;
 	}
+
+
 
 	private void initialize() throws IOException, ClassHierarchyException, CallGraphBuilderCancelException {
 		// initialize a basic analysis scope
@@ -269,6 +277,7 @@ public class FirstAssignment{
 		taint_field = new IField[1];
 		taint_field_num = 0;
 
+
 		CG_DFS(main_point, 0);
 
 //	int count = 0;
@@ -313,7 +322,6 @@ public class FirstAssignment{
 
 		//	System.out.println();
 		//}
-
 
 
 		String DOT_EXE="D:\\Graphviz 2.44.1\\bin\\dot";
@@ -400,9 +408,12 @@ public class FirstAssignment{
 //		}
 		// search the unvisited sons
 
+		int count = 0;
 		for (Iterator<SSAInstruction> instructions = basicBlock.iterator(); instructions.hasNext();){
 
 			SSAInstruction ins = instructions.next();
+			ins_path.add(ins);
+			count++;
 //			System.out.println(ins);
 
 			if (ins instanceof com.ibm.wala.ssa.SSAReturnInstruction){
@@ -412,6 +423,23 @@ public class FirstAssignment{
 				{
 					return 1;
 				}
+			}
+
+			if(ins  instanceof com.ibm.wala.ssa.SSAPutInstruction) {
+				IField ifield=cha.resolveField(((com.ibm.wala.ssa.SSAPutInstruction) ins).getDeclaredField());
+				for(int i=0;i<ins.getNumberOfUses();i++)
+					if(ifRegStain(ins.getUse(i), basicBlock.getMethod(), basicBlock.getMethod().getDeclaringClass())!=-1){
+						AddStainField(ifield);
+					}
+			}
+
+			if(ins  instanceof com.ibm.wala.ssa.SSAGetInstruction) {
+				com.ibm.wala.ssa.SSAGetInstruction get =(com.ibm.wala.ssa.SSAGetInstruction) ins;
+				IField ifield=cha.resolveField(((com.ibm.wala.ssa.SSAGetInstruction) ins).getDeclaredField());
+				if(ifFieldStain(ifield)!=-1) {
+					AddStainRegister(get.getDef(), cfg.getMethod(), cfg.getMethod().getDescriptor(), basicBlock.getMethod().getLineNumber(ins.iindex) , cfg.getMethod().getDeclaringClass());
+				}
+
 			}
 
 			if(ins  instanceof com.ibm.wala.ssa.SSABinaryOpInstruction) {
@@ -428,6 +456,13 @@ public class FirstAssignment{
 
 			if(ins  instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction) {
 				com.ibm.wala.ssa.SSAAbstractInvokeInstruction call = (com.ibm.wala.ssa.SSAAbstractInvokeInstruction) ins;
+
+//				System.out.println("getuse: " + call.getNumberOfUses());
+//				for (int i=0; i < call.getNumberOfUses();i++){
+//					System.out.println(call.getUse(i));
+//
+//				}
+
 				if(ifsource(call.getCallSite().getDeclaredTarget().getSignature())) {
 					System.out.print("source:class:"+cfg.getMethod().getDeclaringClass()+",method:"+basicBlock.getMethod().toString());
 					AddStainRegister(call.getDef(),basicBlock.getMethod(), basicBlock.getMethod().getDescriptor(), basicBlock.getMethod().getLineNumber(call.getProgramCounter()),basicBlock.getMethod().getDeclaringClass() );
@@ -437,20 +472,35 @@ public class FirstAssignment{
 				//sink点
 				if(ifsink(call.getCallSite().getDeclaredTarget().getSignature())) {
 					System.out.println("find sink:"+call.getCallSite().getDeclaredTarget().getSignature());
+					System.out.println("Path:");
+					for (int i = 0; i < ins_path.size(); i++){
+						System.out.println("\t" + ins_path.get(i));
+					}
+
+					for (int i = 0; i < taint_reg.length; i++){
+						System.out.println(taint_reg[i]);
+					}
+
 					for(int i=0;i<taint_num;i++) {
 						if(taint_reg[i]==call.getUse(1)) {
 							//System.out.println("source:\nclass:"+sd.clas[i]+",method:"+sd.MethodNames[i].toString()+",line:"+sd.LineofRegister[i]);
-							System.out.println("!!!!!!it has source to sink");
+							System.out.println("find taint spread path from source to sink!");
 							int sinkline=basicBlock.getMethod().getLineNumber(call.getProgramCounter());
 							System.out.println("sink:class:"+cfg.getMethod().getDeclaringClass()+",method:"+basicBlock.getMethod().toString()+",line:"+sinkline);
 						}
 					}
 				}
 
+				AddStainRegister(call.getDef(0), basicBlock.getMethod(), basicBlock.getMethod().getDescriptor(), 1, basicBlock.getMethod().getDeclaringClass());
+
 				for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
 					CGNode n = it.next();
 					if (n.getMethod().getDescriptor().equals(call.getCallSite().getDeclaredTarget().getDescriptor()) &&
 							n.getMethod().getName().equals(call.getCallSite().getDeclaredTarget().getName())) {
+
+						for(int s=0;s<n.getIR().getNumberOfParameters();s++)
+							if(ifRegStain(ins.getUse(s),basicBlock.getMethod(),basicBlock.getMethod().getDeclaringClass())!=-1)
+								AddStainRegister(n.getIR().getParameter(s),cha.resolveMethod(call.getCallSite().getDeclaredTarget()),cha.resolveMethod(call.getCallSite().getDeclaredTarget()).getDescriptor(), basicBlock.getMethod().getLineNumber(call.getProgramCounter()),cha.resolveMethod(call.getCallSite().getDeclaredTarget()).getDeclaringClass());
 
 						if (n!=null && bb_set.get(basicBlock)<=3 && n.getIR()!=null) {
 							if (!bb_set.containsKey(n.getIR().getBlocks().next()))bb_set.put(n.getIR().getBlocks().next(),0);
@@ -479,7 +529,10 @@ public class FirstAssignment{
 			reverse();
 		}
 
+		for (;count>0; count--){
 
+			ins_path.remove(ins_path.size()-1);
+		}
 
 //		bb_set.add(basicBlock);
 
